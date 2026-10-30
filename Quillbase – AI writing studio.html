@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Quillbase – AI writing studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Serif+4:wght@400;600&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f5fb;--panel:#fff;--ink:#0f1b2d;--mute:#5b6779;--rule:#d9e0ea;--acc:#5b3df5;--accink:#fff;--ok:#0f7a56;--bad:#b3261e;
+--hd:"Bricolage Grotesque",system-ui,sans-serif;--bd:"Source Serif 4",Georgia,serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0c121c;--panel:#141d2b;--ink:#e8edf5;--mute:#93a0b5;--rule:#26334a;--acc:#a99bff;--accink:#0c121c;--ok:#4cc79a;--bad:#ff8a80}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0c121c;--panel:#141d2b;--ink:#e8edf5;--mute:#93a0b5;--rule:#26334a;--acc:#a99bff;--accink:#0c121c;--ok:#4cc79a;--bad:#ff8a80}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--hd)}
+header{display:flex;align-items:center;gap:20px;padding:14px 24px;border-bottom:1px solid var(--rule);background:var(--panel);flex-wrap:wrap}
+.logo{font-weight:700;font-size:20px;letter-spacing:-.02em}
+nav{display:flex;gap:4px;flex:1}
+nav button{background:none;border:0;color:var(--mute);font:500 15px var(--hd);padding:8px 12px;border-radius:6px;cursor:pointer}
+nav button[aria-current=true]{color:var(--ink);background:var(--bg)}
+.meter{text-align:right;line-height:1.1}
+.meter b{font-size:22px;font-variant-numeric:tabular-nums}.meter small{display:block;color:var(--mute);font-size:12px}
+main{max-width:1120px;margin:0 auto;padding:28px 20px 60px}
+h1{font-size:30px;letter-spacing:-.02em;margin:0 0 6px}p.sub{color:var(--mute);margin:0 0 22px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:18px}
+label{display:block;font-size:13px;color:var(--mute);margin:12px 0 4px}
+textarea,input,select{width:100%;font:16px var(--bd);color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-radius:8px;padding:10px}
+textarea{min-height:110px;resize:vertical}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:620px){.row{grid-template-columns:1fr}}
+button.go{background:var(--acc);color:var(--accink);border:0;border-radius:8px;font:700 15px var(--hd);padding:11px 20px;cursor:pointer;margin-top:16px}
+button.go:disabled{opacity:.5;cursor:not-allowed}
+button.alt{background:none;border:1px solid var(--rule);color:var(--ink);border-radius:8px;font:500 14px var(--hd);padding:7px 12px;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.out{font:18px/1.7 var(--bd);white-space:pre-wrap;margin-top:18px}
+.phase{color:var(--mute);font-size:14px;margin-top:14px}
+.err{color:var(--bad);margin-top:12px;font-size:14px}.note{color:var(--mute);font-size:13px;margin-top:10px}
+.list{display:grid;gap:10px}
+.item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--rule);background:var(--panel);border-radius:10px}
+.item h3{margin:0;font-size:16px}.item span{color:var(--mute);font-size:13px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--rule)}td.n{font-variant-numeric:tabular-nums}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+.mrow{padding:8px 0;border-bottom:1px solid var(--rule)}.mrow small{display:block;color:var(--mute);font-size:12px}.score{font-size:22px;font-weight:700;margin-bottom:8px}.chk{font-size:14px;padding:3px 0}#schema{min-height:140px;font:13px/1.4 ui-monospace,monospace}.panel{margin-top:16px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.chip{background:var(--bg);border:1px solid var(--rule);color:var(--mute);border-radius:99px;padding:5px 12px;font:500 13px var(--hd);cursor:pointer}.chip:hover{color:var(--ink);border-color:var(--acc)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--rule);margin:22px 0 4px;overflow-x:auto}.tabs button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font:500 15px var(--hd);padding:10px 14px;cursor:pointer;white-space:nowrap}.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--acc)}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}#toast.on{opacity:1}
+.phase{display:flex;align-items:center;gap:8px}.phase.run:before{content:"";width:12px;height:12px;border:2px solid var(--rule);border-top-color:var(--acc);border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.phase.run:before{animation:none}}
+.hint{color:var(--mute);font-size:13px;margin:4px 0 0}
+.hero{padding:44px 0 26px}.hero h1{font-size:clamp(32px,6vw,54px);line-height:1.05;letter-spacing:-.03em;max-width:17ch;margin:0 0 14px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0}@media(max-width:700px){.steps{grid-template-columns:1fr 1fr}}.step{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:16px}.step b{display:block;margin-bottom:4px}.step span{color:var(--mute);font-size:14px}
+.band{background:var(--acc);color:var(--accink);border-radius:14px;padding:22px 24px;margin:8px 0 26px;font-size:18px}.band b{font-size:26px}
+.faqh details,.faq details{border:1px solid var(--rule);background:var(--panel);border-radius:10px;padding:12px 16px;margin:8px 0}summary{font:600 16px var(--hd);cursor:pointer}details p{margin:8px 0 0;color:var(--mute)}
+.rgrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;margin-top:20px;align-items:start}@media(max-width:900px){.rgrid{grid-template-columns:1fr}}
+.side{display:grid;gap:14px;position:sticky;top:12px}@media(max-width:900px){.side{position:static}}
+.art{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:32px 36px;font:18px/1.75 var(--bd)}@media(max-width:600px){.art{padding:20px}}
+.art.stream{white-space:pre-wrap}.art h1{font:700 34px/1.15 var(--hd);margin:0 0 18px;letter-spacing:-.02em}.art h2{font:700 24px/1.25 var(--hd);margin:30px 0 8px}.art p{margin:0 0 14px;max-width:68ch}.art a{color:var(--acc)}.art h3{font:700 19px var(--hd);margin:22px 0 6px}.art ul{padding-left:22px}
+.art .lede{background:var(--bg);border-left:4px solid var(--acc);padding:14px 16px;border-radius:0 8px 8px 0;font-size:19px}.art .lede small{display:block;font:600 12px var(--hd);color:var(--acc);margin-bottom:4px}
+.ring{width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--rule) 0);display:grid;place-items:center;margin:0 auto 10px}.ring i{font-style:normal;width:74px;height:74px;border-radius:50%;background:var(--panel);display:grid;place-items:center;font:700 26px var(--hd)}
+.serp{font:14px/1.4 Arial,sans-serif;margin-top:8px}.serp u{text-decoration:none;color:var(--mute);font-size:12px}.serp .t{color:#1a0dab;font-size:19px;margin:2px 0}@media(prefers-color-scheme:dark){.serp .t{color:#8ab4f8}}
+.logo{display:flex;align-items:center;gap:8px}
+.steps2{display:flex;gap:6px;list-style:none;padding:0;margin:16px 0 10px;flex-wrap:wrap}.steps2 li{font-size:13px;color:var(--mute);padding:5px 11px;border:1px solid var(--rule);border-radius:99px}.steps2 li.act{color:var(--ink);border-color:var(--acc);background:var(--bg);font-weight:600}.steps2 li.done{color:var(--ok);border-color:var(--ok)}.steps2 li.done:before{content:"\2713 "}
+.bar{height:6px;background:var(--rule);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .4s}.pmeta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mute);margin-top:8px;gap:10px}
+.caret{display:inline-block;width:8px;height:1em;background:var(--acc);vertical-align:text-bottom;margin-left:2px;animation:bl 1s steps(2) infinite}@keyframes bl{50%{opacity:0}}@media(prefers-reduced-motion:reduce){.caret{animation:none}}.rgrid.solo{grid-template-columns:1fr}
+.frow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;padding:6px 0;border-bottom:1px solid var(--rule)}hr{border:0;border-top:1px solid var(--rule);margin:26px 0}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="7" fill="var(--acc)"/><path d="M7 19c1-6 5-10 12-12-1 7-5 11-12 12zM7 19l5-5" stroke="var(--accink)" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>Quillbase</div>
+  <nav>
+    <button data-v="home" aria-current="true">Home</button><button data-v="create">Studio</button>
+    <button data-v="docs">Documents</button>
+    <button data-v="usage">Usage</button>
+  </nav>
+  <div class="meter"><b id="bal">…</b><small>credits left</small></div>
+</header>
+<main>
+<section id="v-home">
+  <div class="hero"><h1>Articles that search and AI answers can quote</h1><p class="sub" style="font-size:18px;max-width:52ch">Describe a topic, add what you know first-hand, and get a clear draft with a slug, meta tags, FAQ and schema, scored before you publish.</p><button class="go" data-go="create">Open the studio</button></div>
+  <div class="steps"><div class="step"><b>1. Brief</b><span>Give a topic, an audience and any real details only you know.</span></div><div class="step"><b>2. Draft</b><span>Get an answer-first article with clear headings and an FAQ.</span></div><div class="step"><b>3. Check</b><span>See your slug, meta tags, Google preview and a 100-point SEO score.</span></div><div class="step"><b>4. Keep</b><span>Edit, copy or download the draft, and copy ready-made schema.</span></div></div>
+  <div class="band"><b>10,000 free credits</b><br>One article costs 1 credit. Failed runs are refunded automatically.</div>
+  <div class="faqh"><details><summary>Is the text ready to publish?</summary><p>Treat it as a strong first draft. Add your own experience, check the facts, and edit it into your voice.</p></details><details><summary>Will this rank?</summary><p>Nobody can promise rankings. The score checks structure and on-page basics only.</p></details><details><summary>Where is my work saved?</summary><p>In your account, under Documents, when you are signed in to Claude.</p></details></div>
+</section>
+<section id="v-create" hidden>
+  <h1>Write search-ready articles</h1>
+  <p class="sub">Human-sounding draft, slug, meta tags, FAQ schema and a live SEO score. 1 credit per article, refunded if a run fails.</p>
+  <div class="card">
+    <label for="brief">Topic or brief</label>
+    <textarea id="brief" placeholder="e.g. How to start composting in a small apartment"></textarea>
+    <div class="chips" aria-label="Example topics"><button class="chip" type="button">How to price your first online course</button><button class="chip" type="button">What is AI search and why course creators should care</button><button class="chip" type="button">Membership site or online course: which to start with</button></div>
+    <label for="exp">Your own experience or facts to include (optional)</label>
+    <textarea id="exp" style="min-height:80px" placeholder="Real details only you know: what you tried, numbers you measured, mistakes you made, local specifics."></textarea>
+    <p class="hint">Add real details, one per line: what you tried, numbers, mistakes, local specifics. The writer works each one into the section where it fits best, in your voice, and the score panel confirms they were used. Nothing is invented for you.</p>
+    <label for="aud">Who is it for?</label><input id="aud" placeholder="e.g. coaches launching a first course">
+    <div class="row" style="margin-top:0"><div><label for="ctype">Content type</label><select id="ctype"><option>Blog post</option><option>Article</option></select></div></div>
+    <label for="ufile">Your voice and rule files (optional, .md or .txt)</label>
+    <input type="file" id="ufile" accept=".md,.txt,.markdown" multiple><div id="flist"></div>
+    <p class="hint">Upload your style guide or rules. They are saved to your account and followed in every piece. Word and PDF files are not supported here, so save them as .md or .txt first.</p>
+    <label for="cta">Closing call to action (optional, added after the FAQ)</label>
+    <textarea id="cta" style="min-height:70px">Ready to Take Action? Try Zenler Risk Free for 30 Days and join the Accelerator Program that guides you step-by-step toward success. https://zenler.co/sell</textarea>
+    <label for="lnk">Pages to link to (optional, one per line: title - URL)</label><textarea id="lnk" style="min-height:70px" placeholder="Course creation guide - https://yoursite.com/course-creation"></textarea>
+    <div class="row">
+      <div><label for="voice">Voice</label><select id="voice"><option>Friendly mentor (conversational, practical)</option><option>Friendly blog</option><option>Professional</option><option>Product page</option><option>Concise news</option></select></div>
+      <div><label for="words">Word count</label><select id="words"><option>400</option><option>800</option><option selected>1200</option><option>1500</option><option>2000</option></select></div>
+      <div><label for="kw">Keywords (first is primary)</label><input id="kw"></div>
+    </div>
+    <button class="go" id="gen">Write article (1 credit)</button>
+    <div id="prog" hidden><ol class="steps2" id="st" aria-label="Progress"></ol><div class="bar"><i id="barf"></i></div><div class="pmeta"><span id="pm"></span><button class="alt" id="cancel" type="button">Cancel</button></div></div>
+    <div class="phase" id="phase" role="status"></div>
+    <div class="err" id="err" role="alert"></div>
+  </div>
+  <div id="result" hidden>
+    
+    <div class="rgrid"><article class="art" id="out"></article><aside class="side"><div class="card"><b>How it looks on Google</b><div class="serp" id="serp"></div></div><div class="card" id="seo"></div><div class="card"><b>Listing details</b><div id="meta"></div></div><div class="card"><b>Schema markup (Article + FAQ, JSON-LD)</b><textarea id="schema" readonly aria-label="Schema markup"></textarea><div class="tools"><button class="alt" id="cs">Copy schema</button><button class="alt" id="cm">Copy meta</button></div></div></aside></div>
+    <div class="tools"><button class="alt" id="copy">Copy</button><button class="alt" id="dl">Download .md</button></div>
+    <div class="note">Saved to Documents. Read it through, add your own experience and check every fact before you publish.</div>
+  </div>
+</section>
+<section id="v-docs" hidden>
+  <h1>Documents</h1><p class="sub">Your saved drafts.</p>
+  <div class="list" id="doclist"></div>
+  <div id="editor" hidden>
+    <div class="tools"><button class="alt" id="back">Back to list</button><button class="alt" id="save">Save changes</button><button class="alt" id="ecopy">Copy</button><button class="alt" id="edl">Download .md</button><button class="alt" id="del">Delete</button></div>
+    <input id="etitle" aria-label="Title" style="font:700 20px var(--hd);margin-bottom:10px">
+    <textarea id="ebody" style="min-height:420px;font:17px/1.6 var(--bd)" aria-label="Article text"></textarea>
+  </div>
+</section>
+<section id="v-usage" hidden>
+  <h1>Usage</h1><p class="sub">Every credit change is logged here.</p>
+  <div class="card"><table><thead><tr><th>When</th><th>Reason</th><th>Change</th></tr></thead><tbody id="ledger"></tbody></table></div>
+  <div class="note" id="stor"></div>
+</section>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+(function(){
+var START=10000, COST=1, $=function(i){return document.getElementById(i)};
+var db=null, uid=null, sample=null, dl=null, balance=START, docs=[], ledger=[], cur=null, busy=false;
+function pth(s){return "data/users/"+uid+"/"+s}
+function show(v){["home","create","docs","usage"].forEach(function(n){$("v-"+n).hidden=n!==v});
+  document.querySelectorAll("nav button").forEach(function(b){b.setAttribute("aria-current",b.dataset.v===v)});
+  if(v==="docs"){$("editor").hidden=true;$("doclist").hidden=false}}
+document.querySelectorAll("nav button").forEach(function(b){b.onclick=function(){show(b.dataset.v)}});
+function paint(){
+  $("bal").textContent=balance.toLocaleString("en-US");
+  var l=$("doclist");l.textContent="";
+  if(!docs.length){var e=document.createElement("div");e.className="note";e.textContent="No documents yet. Write your first article in Create.";l.appendChild(e)}
+  docs.forEach(function(d){var it=document.createElement("div");it.className="item";
+    var t=document.createElement("div"),h=document.createElement("h3"),s=document.createElement("span");
+    h.textContent=d.title;s.textContent=new Date(d.at).toLocaleString();t.appendChild(h);t.appendChild(s);
+    var b=document.createElement("button");b.className="alt";b.textContent="Open";b.onclick=function(){openDoc(d)};
+    it.appendChild(t);it.appendChild(b);l.appendChild(it)});
+  var tb=$("ledger");tb.textContent="";
+  ledger.slice().sort(function(a,b){return b.at-a.at}).slice(0,60).forEach(function(r){
+    var tr=document.createElement("tr");
+    [new Date(r.at).toLocaleString(),r.reason,(r.delta>0?"+":"")+r.delta].forEach(function(x,i){var td=document.createElement("td");td.textContent=x;if(i===2){td.className="n "+(r.delta>0?"pos":"neg")}tr.appendChild(td)});
+    tb.appendChild(tr)});
+  $("stor").textContent=db?"Balance and documents are saved to your account.":"Storage isn’t available here, so this session isn’t saved.";
+}
+async function setBal(n,reason,delta){
+  balance=n;ledger.push({at:Date.now(),reason:reason,delta:delta});
+  if(db){try{await db.doc(pth("account")).set({balance:n});await db.collection(pth("ledger")).add({at:Date.now(),reason:reason,delta:delta})}catch(e){}}
+  paint()}
+async function init(){
+  paint();
+  try{var u=await claude.use("user");uid=u&&await u.id();db=uid?await claude.use("db"):null}catch(e){db=null}
+  try{sample=await claude.use("sample")}catch(e){sample=null}
+  try{dl=await claude.use("downloads")}catch(e){dl=null}
+  if(db){try{
+    var a=await db.doc(pth("account")).get();
+    if(a.exists){balance=a.data().balance}else{await db.doc(pth("account")).set({balance:START});await db.collection(pth("ledger")).add({at:Date.now(),reason:"Welcome credits",delta:START})}
+    var d=await db.collection(pth("docs")).orderBy("at","desc").limit(100).get();docs=d.docs.map(function(x){var o=x.data();o.id=x.id;return o});
+    var g=await db.collection(pth("ledger")).orderBy("at","desc").limit(60).get();ledger=g.docs.map(function(x){return x.data()});var vf=await db.doc(pth("voicefiles")).get();if(vf.exists){vfiles=vf.data().files||[];paintFiles()}
+  }catch(e){}}
+  if(!ledger.length){ledger=[{at:Date.now(),reason:"Welcome credits",delta:START}]}
+  paint()}
+var NL=String.fromCharCode(10);
+var VOICE="BLOG POST STYLE (the author's voice profile): conversational, friendly and approachable, authoritative without being formal. Supportive, clear and encouraging, measured and grounded, never hype. Helpful mentor energy: a guide walking alongside the reader, not a guru. Calm humour where natural. Short to medium sentences with an occasional longer one for clarity or a story. Natural use of I and you, contractions, plain beginner-friendly English, no jargon unless explained. Paragraphs of 2 to 5 sentences. Teach, then give an example. Rhetorical questions only to challenge thinking, never in every section. Signature touches, two or three at most and only where natural: 'Think again.', 'This is simple to do.', 'Remember...', 'Keep your eyes open...', 'This is not an overnight success.', 'Are you ready...?'. Occasional exclamation for warmth and at most two emoji in the whole post. Lists only when they truly help (steps, breakdowns, comparisons), and every list is followed by a short explanation or example. Open by saying what the reader will learn. Close with an encouraging next step.";
+function buildPrompt(brief){var kws=$("kw").value||"none",blog=$("ctype").value==="Blog post",links=$("lnk").value.trim();return [
+"You are a friendly, experienced mentor writing for real readers. Write one long-form "+(blog?"blog post":"article")+". Use British English spelling.",
+"Topic: "+brief,"Voice: "+$("voice").value,"Target length: between "+Math.round($("words").value*.95)+" and "+Math.round($("words").value*1.1)+" words. Do not stop early",
+"Keywords (the first is primary; if none are given, choose the best primary keyword and 4 to 8 related search phrases yourself): "+kws,
+"Audience: "+($("aud").value||"beginners, such as course creators, coaches, membership owners and digital business owners"),
+"AUTHOR'S REAL DETAILS (use every one; place each in the section where it fits best, woven into the paragraph in the author's own first-person voice, keeping numbers and facts exactly as given; never dump them together or only in the intro; add nothing beyond them): "+($("exp").value.trim()||"none supplied, so do not claim personal experience, clients or results; use clearly hypothetical examples only"),
+"Pages to link to inside the body: "+(links||"none supplied, so add no links"),"AUTHOR'S OWN FILES (follow their voice, tone and rules; they override the defaults where they differ): "+(vfiles.map(function(f){return "FILE "+f.name+NL+f.text}).join(NL+NL).slice(0,16000)||"none uploaded"),"",
+(blog?VOICE:"ARTICLE STYLE: still friendly and plain English, but more structured and explanatory: clear definitions, steps and comparisons, in a calm, confident tone."),
+"HUMAN WRITING RULES: Write for humans first. The reader should feel helped, not marketed to. Use plain words and say exactly what you mean. Vary sentence length: some very short. Like this. Then a longer sentence when the reader needs context. Keep paragraphs to 2 to 5 sentences and make them different sizes. Never start several sentences in a row the same way. Add specific, practical detail instead of broad claims. Use a clear opinion where it suits, realistic expectations instead of hype, and honest limits. Use each of these at most once if they fit naturally: 'The problem is...', 'This is where...', 'Think again.' Examples may be hypothetical scenarios, clearly framed as such (for example 'Picture a coach who...'); never present invented people or stories as real. Make sections different shapes: one with two paragraphs, one built around a short example, one with a short list, one that answers a question in a single paragraph. Never repeat the same section pattern and do not open consecutive sections the same way. Avoid a rhetorical question followed by its answer in every section. Do not use perfect three-part lists, generic summaries or motivational filler. Cut unnecessary adjectives. Do not add deliberate spelling mistakes. Never invent statistics, quotes, studies or sources.",
+"BANNED: in today's digital landscape, comprehensive guide, it's important to note, unlock the power of, take your business to the next level, game-changer, dive into, delve, leverage, robust, seamless, tapestry, transform, revolutionise, empower, elevate, 'Final Thoughts', 'Conclusion', 'Whether you are X or Y', 'Let's dive', 'plays a crucial role', 'a testament to', 'it's worth noting', 'when it comes to', 'at the end of the day'. Use em dashes sparingly for emphasis, at most three in the whole piece.",
+"SEO, GEO AND AEO RULES: The first paragraph is the INTRO, about 150 characters, answers the main question straight away and contains the primary keyword. Use one H1 only (it is the TITLE). Use 4 to 6 H2 headings written for search intent, question style where natural, one with the primary keyword; use H3 only where it truly helps. Put a short direct answer under key headings so answer engines can quote it. Define beginner terms simply. Include a comparison where useful. Use the exact primary keyword at about 1% of all words (counting every word of the phrase), and use pronouns and natural variations for the rest, never stuffed. Keep sentences short: average under 16 words, with short everyday words, so the text reads easily (Flesch 60 or higher). Put internal links inline in the sentence where they help, as [descriptive anchor](url), using only the URLs supplied. Before the FAQ, add an H2 closing section with a natural title such as 'What To Do Next', 'A Simple Way To Start', 'Where This Goes From Here', 'Your Next Step' or 'Ready To Put This Into Practice?' that gives one clear next step. End with an H2 named FAQ holding 4 to 6 real search questions, each answer 2 to 5 sentences.",
+"","OUTPUT FORMAT, exactly, plain text only:","TITLE: the H1, 50 to 60 characters","SLUG: lowercase-hyphenated, max 60 characters, includes the primary keyword","META_TITLE: 50 to 60 characters, primary keyword near the start","META_DESC: 140 to 160 characters, benefit led, ends with a soft call to action","INTRO: the opening paragraph, about 150 characters","PRIMARY_KEYWORD: one phrase","RELATED_KEYWORDS: 4 to 8 phrases, comma separated","CATEGORY: one suggested category","TAGS: 4 to 6 tags, comma separated","---ARTICLE---","The article body starting with the INTRO paragraph. Headings start with '## ' (or '### '). FAQ pairs are written as 'Q: question' on one line and 'A: answer' on the next line."].join(NL)}
+function parse(t){var L=t.split(NL),h={},bi=-1;for(var i=0;i<L.length;i++){if(L[i].indexOf("---ARTICLE---")===0){bi=i;break}var k=L[i].indexOf(":");if(k>0)h[L[i].slice(0,k).trim()]=L[i].slice(k+1).trim()}
+var body=(bi>=0?L.slice(bi+1):L).join(NL).trim();return{title:h.TITLE||body.split(NL)[0],slug:h.SLUG||"",mt:h.META_TITLE||"",md:h.META_DESC||"",intro:h.INTRO||"",pk:h.PRIMARY_KEYWORD||"",rk:h.RELATED_KEYWORDS||"",cat:h.CATEGORY||"",tags:h.TAGS||"",body:body}}
+function words(s){return s.split(NL).join(" ").split(" ").filter(Boolean)}
+function syl(w){var n=0,p=false,v="aeiouy";w=w.toLowerCase();for(var i=0;i<w.length;i++){var c=v.indexOf(w[i])>=0;if(c&&!p)n++;p=c}return Math.max(1,n)}
+function calc(P){var PL=plain(P.body),W=words(PL),n=W.length,pk=($("kw").value.split(",")[0]||P.pk||"").trim().toLowerCase(),body=PL.toLowerCase();
+var occ=pk?body.split(pk).length-1:0,dens=n?occ*pk.split(" ").length/n*100:0;
+var S=PL.split("!").join(".").split("?").join(".").split(".").filter(function(x){return x.trim().length>3});
+var sy=0;W.forEach(function(w){sy+=syl(w)});var fl=206.835-1.015*(n/Math.max(1,S.length))-84.6*(sy/Math.max(1,n));
+var Ls=P.body.split(NL),h2=Ls.filter(function(l){return l.indexOf("## ")===0}).length,faq=Ls.filter(function(l){return l.indexOf("Q:")===0}).length;
+var first=Ls.filter(function(l){return l.trim()&&l.indexOf("#")!==0})[0]||"",target=+$("words").value;
+var low=P.body.toLowerCase().split("’").join("'"),bad=["in today's digital landscape","comprehensive guide","it's important to note","unlock the power","next level","game-changer","game changer","dive into","final thoughts","delve","tapestry","seamless","revolutionise","revolutionize","empower","plays a crucial role","a testament to","it's worth noting","when it comes to","at the end of the day","in the world of","let's dive"].filter(function(x){return low.indexOf(x)>=0});var slugOk=/^[a-z0-9-]+$/.test(P.slug)&&P.slug.length<=60&&(!pk||pk.split(" ").every(function(w){return P.slug.indexOf(w)>=0}));
+var op={},mx=0,mo="";S.forEach(function(x){var w=x.trim().toLowerCase().split(" ").slice(0,2).join(" ");if(w.length>3){op[w]=(op[w]||0)+1;if(op[w]>mx){mx=op[w];mo=w}}});
+var pw=P.body.split(NL).filter(function(l){l=l.trim();return l&&l.indexOf("#")!==0&&l.indexOf("Q:")!==0&&l.indexOf("A:")!==0&&l.indexOf("- ")!==0}).map(function(l){return words(l).length}),pm=pw.reduce(function(a,b){return a+b},0)/Math.max(1,pw.length),pv=Math.sqrt(pw.reduce(function(a,b){return a+(b-pm)*(b-pm)},0)/Math.max(1,pw.length))/Math.max(1,pm);
+var ex=$("exp").value.split(NL).join(". ").split(". ").map(function(x){return x.trim()}).filter(function(x){return x.length>3}),used=0;
+ex.forEach(function(x){var ws=x.toLowerCase().split(" ").filter(function(w){return w.replace(/[^a-z0-9]/g,"").length>4}),nm=x.match(/[0-9][0-9,.]*/g)||[];
+var hit=nm.some(function(m){return PL.indexOf(m)>=0})||(ws.length&&ws.filter(function(w){return body.indexOf(w.replace(/[^a-z0-9]/g,""))>=0}).length>=Math.min(2,ws.length));if(hit)used++});
+var extra=[["No repeated sentence openings"+(mx>4?" ("+mo+" used "+mx+" times)":""),mx<=4,5],["Paragraph sizes vary naturally",pv>=.35,5],["Title is 50 to 60 characters ("+P.title.length+")",P.title.length>=50&&P.title.length<=60,5]];
+if(ex.length)extra.push(["Your own details are used in the text ("+used+" of "+ex.length+")",used>=Math.ceil(ex.length*.8),10]);
+var C=[["Meta title is 30 to 60 characters and has the primary keyword ("+P.mt.length+")",P.mt.length>=30&&P.mt.length<=60&&(!pk||P.mt.toLowerCase().indexOf(pk)>=0),10],
+["Meta description is 120 to 160 characters and has the primary keyword ("+P.md.length+")",P.md.length>=120&&P.md.length<=160&&(!pk||P.md.toLowerCase().indexOf(pk)>=0),10],
+["Slug is clean, short and has the keyword",slugOk,10],
+["Primary keyword appears in the first 100 words",!pk||W.slice(0,100).join(" ").toLowerCase().indexOf(pk)>=0,10],
+["Keyword density 0.5% to 2.5% ("+dens.toFixed(1)+"%)",dens>=.5&&dens<=2.5,15],
+["Answer first: opening paragraph is 60 words or fewer ("+words(first).length+")",words(first).length<=60&&words(first).length>0,10],
+["At least 4 H2 headings ("+h2+")",h2>=4,10],["FAQ with at least 3 questions ("+faq+")",faq>=3,10],
+["Easy to read, Flesch 60 or higher ("+Math.round(fl)+")",fl>=60,10],["Intro is about 150 characters ("+P.intro.length+")",P.intro.length>=110&&P.intro.length<=190,5],["No AI cliche phrases"+(bad.length?" (found: "+bad.join(", ")+")":""),bad.length===0,10],["Length within 15% of target ("+n+" words)",Math.abs(n-target)<=target*.15,5]];
+C=C.concat(extra);var sc=0,tot=0;C.forEach(function(c){tot+=c[2];if(c[1])sc+=c[2]});return{C:C,score:Math.round(sc/tot*100)}}
+function schema(P){var Ls=P.body.split(NL),F=[],q=null;Ls.forEach(function(l){if(l.indexOf("Q:")===0)q=l.slice(2).trim();else if(l.indexOf("A:")===0&&q){F.push({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:l.slice(2).trim()}});q=null}});
+return JSON.stringify({"@context":"https://schema.org","@graph":[{"@type":"Article",headline:P.title,description:P.md},{"@type":"FAQPage",mainEntity:F}]},null,2)}
+var vfiles=[];
+function paintFiles(){var b=$("flist");b.textContent="";vfiles.forEach(function(f,i){var r=el("div","frow");r.appendChild(el("span","",f.name+" ("+Math.round(f.text.length/1000)+"k characters)"));var x=el("button","alt","Remove");x.type="button";x.onclick=function(){vfiles.splice(i,1);saveFiles();paintFiles()};r.appendChild(x);b.appendChild(r)})}
+async function saveFiles(){if(db){try{await db.doc(pth("voicefiles")).set({files:vfiles})}catch(e){}}}
+$("ufile").onchange=function(){var inp=this;Array.prototype.slice.call(inp.files).forEach(function(f){var n=f.name.toLowerCase();if(!(n.slice(-3)===".md"||n.slice(-4)===".txt"||n.slice(-9)===".markdown")){toast("Use .md or .txt files");return}if(f.size>200000||vfiles.length>=5){toast(f.size>200000?f.name+" is over 200 KB":"Five files at most");return}var rd=new FileReader();rd.onload=function(){vfiles.push({name:f.name,text:String(rd.result).slice(0,12000)});saveFiles();paintFiles();toast("Added "+f.name)};rd.readAsText(f)});inp.value=""};
+function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!==undefined)e.textContent=x;return e}
+function tail(p,s){s.split(" ").forEach(function(w,i){if(i)p.appendChild(document.createTextNode(" "));if(w.indexOf("https://")===0){var a=el("a","",w);a.href=w;a.target="_blank";a.rel="noopener";p.appendChild(a)}else p.appendChild(document.createTextNode(w))})}
+function ctaTxt(){var c=$("cta").value.trim();return c?NL+NL+"---"+NL+c:""}
+function addT(p,s){var i;while((i=s.indexOf("["))>=0){var j=s.indexOf("](",i),k=s.indexOf(")",j);if(j<0||k<0||s.slice(j+2,j+6)!=="http")break;p.appendChild(document.createTextNode(s.slice(0,i)));var a=el("a","",s.slice(i+1,j));a.href=s.slice(j+2,k);a.target="_blank";a.rel="noopener";p.appendChild(a);s=s.slice(k+1)}tail(p,s)}
+function mdRender(box,body,title){box.textContent="";box.appendChild(el("h1","",title));var L=body.split(NL),ul=null,fq=null,q=null,first=true;
+L.forEach(function(l){l=l.trim();if(!l){ul=null;return}
+if(l.indexOf("## ")===0){ul=null;fq=null;var t=l.slice(3);box.appendChild(el("h2","",t));if(t.toLowerCase().indexOf("faq")>=0){fq=el("div","faq");box.appendChild(fq)}return}
+if(l==="---"){box.appendChild(el("hr"));ul=null;fq=null;return}if(l.indexOf("### ")===0){ul=null;box.appendChild(el("h3","",l.slice(4)));return}if(l.indexOf("# ")===0)return;
+if(l.indexOf("Q:")===0&&fq){q=l.slice(2).trim();return}
+if(l.indexOf("A:")===0&&fq&&q){var d=el("details"),s=el("summary","",q);d.appendChild(s);var ap=el("p");addT(ap,l.slice(2).trim());d.appendChild(ap);fq.appendChild(d);q=null;return}
+if(l.indexOf("- ")===0){if(!ul){ul=el("ul");box.appendChild(ul)}var li=el("li");addT(li,l.slice(2));ul.appendChild(li);return}
+var p=el("p",first?"lede":"");if(first){p.appendChild(el("small","","Quick answer"));addT(p,l);first=false}else addT(p,l);box.appendChild(p)})}
+function serp(P){var s=$("serp");s.textContent="";s.appendChild(el("u","","yoursite.com › "+(P.slug||"article")));s.appendChild(el("div","t",P.mt||P.title));s.appendChild(el("div","",P.md))}
+document.querySelectorAll("[data-go]").forEach(function(b){b.onclick=function(){show(b.dataset.go)}});
+var timers=[];function clr(){timers.forEach(clearTimeout);timers=[];$("phase").className="phase"}
+function toast(m){var t=$("toast");t.textContent=m;t.className="on";setTimeout(function(){t.className=""},1800)}
+function selTab(n){return;document.querySelectorAll(".tabs button").forEach(function(b){b.setAttribute("aria-selected",b.dataset.t===n)});document.querySelectorAll(".pane").forEach(function(p){p.hidden=p.id!=="t-"+n})}
+document.querySelectorAll(".tabs button").forEach(function(b){b.onclick=function(){selTab(b.dataset.t)}});
+document.querySelectorAll(".chip").forEach(function(c){c.onclick=function(){$("brief").value=c.textContent;$("brief").focus()}});
+$("brief").addEventListener("keydown",function(e){if((e.ctrlKey||e.metaKey)&&e.key==="Enter")$("gen").click()});
+function render(P,txt){$("result").querySelector(".rgrid").className="rgrid";$("result").querySelector(".side").hidden=false;$("out").className="art";mdRender($("out"),P.body+ctaTxt(),P.title);serp(P);
+var m=$("meta");m.textContent="";[["Title (H1)",P.title],["Slug","/"+P.slug],["Meta title ("+P.mt.length+")",P.mt],["Meta description ("+P.md.length+")",P.md],["Intro ("+P.intro.length+" characters)",P.intro],["Primary keyword",P.pk],["Related keywords",P.rk],["Category",P.cat],["Tags",P.tags]].forEach(function(r){var d=document.createElement("div");d.className="mrow";var a=document.createElement("small"),b=document.createElement("div");a.textContent=r[0];b.textContent=r[1];d.appendChild(a);d.appendChild(b);m.appendChild(d)});
+var R=calc(P),s=$("seo");s.textContent="";var hd=document.createElement("div");hd.className="ring";hd.style.setProperty("--p",R.score);hd.style.setProperty("--c",R.score>=80?"var(--ok)":R.score>=50?"#c98a14":"var(--bad)");var ri=document.createElement("i");ri.textContent=R.score;hd.appendChild(ri);s.appendChild(hd);var sl=document.createElement("div");sl.style.cssText="text-align:center;margin-bottom:8px";sl.textContent="SEO score out of 100";s.appendChild(sl);
+R.C.forEach(function(c){var d=document.createElement("div");d.className="chk "+(c[1]?"pos":"neg");d.textContent=(c[1]?"Pass: ":"Fix: ")+c[0];s.appendChild(d)});
+$("schema").value=schema(P)}
+var tick=null,ctl=null,cancelled=false,STEPS=["Analyze brief","Plan structure","Draft article","Improve SEO score","Final check"];
+function plain(t){return t.split(NL).map(function(l){l=l.trim();var hd=false;if(l.indexOf("### ")===0){l=l.slice(4);hd=true}else if(l.indexOf("## ")===0){l=l.slice(3);hd=true}else if(l.indexOf("Q:")===0||l.indexOf("A:")===0)l=l.slice(2).trim();else if(l.indexOf("- ")===0)l=l.slice(2);var i,j,k;while((i=l.indexOf("["))>=0){j=l.indexOf("](",i);k=l.indexOf(")",j);if(j<0||k<0)break;l=l.slice(0,i)+l.slice(i+1,j)+l.slice(k+1)}if(hd&&l&&".!?".indexOf(l.slice(-1))<0)l+=".";return l}).join(NL)}
+function ser(P){return ["TITLE: "+P.title,"SLUG: "+P.slug,"META_TITLE: "+P.mt,"META_DESC: "+P.md,"INTRO: "+P.intro,"PRIMARY_KEYWORD: "+P.pk,"RELATED_KEYWORDS: "+P.rk,"CATEGORY: "+P.cat,"TAGS: "+P.tags,"---ARTICLE---",P.body].join(NL)}
+function fixPrompt(P,R){var f=R.C.filter(function(c){return !c[1]}).map(function(c){return "- "+c[0]}),T=+$("words").value,pk=($("kw").value.split(",")[0]||P.pk||"").trim();
+return ["You are editing a draft so it passes an SEO checklist while keeping a warm, human, plain-English voice (British spelling).","Fix these failing checks:",f.join(NL),"","Targets: the primary keyword ("+pk+") used naturally at about 1% of all words, counting every word of the phrase (use pronouns or variations for the rest); average sentence under 16 words and short everyday words, so it scores Flesch 60 or higher; total length between "+Math.round(T*.95)+" and "+Math.round(T*1.1)+" words; meta title 30 to 60 characters; meta description 120 to 160 characters; INTRO 110 to 190 characters and identical to the article's first paragraph.","If flagged, vary repeated sentence openings and paragraph sizes, work any missing author details naturally into the section where they fit, and make the TITLE 50 to 60 characters. Keep the facts, links, headings, FAQ and any author details. Do not invent facts. Do not add cliches. Change only what the checks need.","Return the complete revised text in exactly the same format, starting with TITLE:.","","DRAFT:",ser(P)].join(NL)}
+function setStep(i){var o=$("st");o.textContent="";STEPS.forEach(function(s,k){var li=el("li",k<i?"done":k===i?"act":"",s);if(k===i)li.setAttribute("aria-current","step");o.appendChild(li)})}
+function setBar(p){$("barf").style.width=Math.min(100,p)+"%"}
+function mm(s){return Math.floor(s/60)+":"+("0"+s%60).slice(-2)}
+function live(text){var out=$("out");$("result").querySelector(".rgrid").className="rgrid solo";$("result").querySelector(".side").hidden=true;
+if(text.indexOf("---ARTICLE---")<0){out.className="art";out.textContent="Setting up the title and search listing…";return 0}
+var P=parse(text);out.className="art";mdRender(out,P.body,P.title||"Writing…");out.appendChild(el("span","caret"));return words(plain(P.body)).length}
+$("cancel").onclick=function(){cancelled=true;try{ctl.abort()}catch(e){}$("phase").textContent="Cancelling…"};
+$("gen").onclick=async function(){
+  if(busy)return;var brief=$("brief").value.trim();$("err").textContent="";
+  if(!brief){$("err").textContent="Enter a topic or brief first.";return}
+  if(balance<COST){$("err").textContent="You’re out of credits. Generation is paused.";return}
+  if(!sample){$("err").textContent="Writing isn’t available in this view. Open the published page while signed in to Claude.";return}
+  busy=true;cancelled=false;ctl=new AbortController();$("gen").disabled=true;
+  await setBal(balance-COST,"Reserved for article",-COST);
+  var ok=false,P=null,latest="",changed=false,t0=Date.now(),T=+$("words").value,stage=1,wn=0,note="Analyzing your brief…";
+  $("prog").hidden=false;$("cancel").hidden=false;$("result").hidden=false;$("out").className="art";$("out").textContent="Your draft appears here as it is written. This usually takes one to two minutes.";
+  $("result").querySelector(".rgrid").className="rgrid solo";$("result").querySelector(".side").hidden=true;
+  $("phase").className="phase run";$("phase").textContent=note;setStep(0);setBar(4);
+  timers.push(setTimeout(function(){if(stage===1){setStep(1);note="Planning the structure…";$("phase").textContent=note;setBar(8)}},1500));
+  tick=setInterval(function(){var s=Math.round((Date.now()-t0)/1000);
+    if(stage===2&&changed){changed=false;wn=live(latest);setBar(10+55*Math.min(1,wn/T))}
+    $("pm").textContent=(stage===2?"Drafting · "+wn.toLocaleString("en-US")+" of about "+T.toLocaleString("en-US")+" words":note)+" · "+mm(s)},400);
+  try{
+    var r=await sample(buildPrompt(brief),{cache:false,modelTier:"default",signal:ctl.signal,onText:function(t){latest=t.text;changed=true;if(stage<2){stage=2;setStep(2);note="Drafting in your voice…";$("phase").textContent=note}}});
+    var txt=(r.text||"").trim();if(!txt)throw new Error("empty");
+    P=parse(txt);ok=true;stage=3;render(P,txt);
+    var R=calc(P),pass=0;
+    while(R.score<100&&pass<2&&!cancelled){pass++;setStep(3);setBar(65+(pass-1)*15);
+      note="Improving SEO score ("+R.score+" now, pass "+pass+" of 2)…";$("phase").textContent=note;
+      try{var r2=await sample(fixPrompt(P,R),{cache:false,modelTier:"default",signal:ctl.signal});
+        var P2=parse((r2.text||"").trim());if(!P2.body||P2.body.length<300)break;var R2=calc(P2);
+        if(R2.score<R.score)break;P=P2;R=R2;render(P,"")}catch(e2){break}}
+    setStep(4);setBar(100);
+    var title=P.title.slice(0,90)||"Untitled";
+    var rec={title:title,body:P.body+ctaTxt(),slug:P.slug,mt:P.mt,md:P.md,intro:P.intro,pk:P.pk,rk:P.rk,cat:P.cat,tags:P.tags,at:Date.now()};
+    if(db){try{var ref=await db.collection(pth("docs")).add(rec);rec.id=ref.id}catch(e3){}}
+    docs.unshift(rec);cur=rec;
+    ledger.push({at:Date.now(),reason:"Article: "+title.slice(0,40),delta:0});
+    var left=R.C.filter(function(c){return !c[1]}).length;
+    clr();$("phase").textContent="Done. SEO score "+R.score+" out of 100"+(left?", "+left+" check"+(left>1?"s":"")+" left to fix by hand (see the score panel)":"")+". 1 credit used.";toast("Article ready");
+  }catch(e){
+    if(!ok){await setBal(balance+COST,cancelled?"Refund: cancelled":"Refund: generation failed",COST);$("result").hidden=true;$("prog").hidden=true;
+      $("err").textContent=cancelled?"Cancelled. Your credit was refunded.":(e&&e.code==="rate_limited")?"Too many requests. Wait a moment, then try again. Your credit was refunded.":"Generation failed. Your credit was refunded.";$("phase").textContent=""}}
+  clearInterval(tick);$("cancel").hidden=true;clr();busy=false;$("gen").disabled=false;paint()};
+
+function copy(t){try{navigator.clipboard.writeText(t);toast("Copied")}catch(e){toast("Copy not available here")}}
+async function save(name,t){if(dl){try{await dl.save({filename:name.replace(/[^\w\- ]+/g,"").trim().slice(0,50)+".md",data:t});toast("Download started")}catch(e){}}else{copy(t)}}
+$("cs").onclick=function(){copy($("schema").value)};$("cm").onclick=function(){copy(cur?["Slug: "+cur.slug,"Meta title: "+cur.mt,"Meta description: "+cur.md,"Intro: "+(cur.intro||""),"Primary keyword: "+(cur.pk||""),"Related keywords: "+(cur.rk||""),"Category: "+(cur.cat||""),"Tags: "+(cur.tags||"")].join(NL):"")};$("copy").onclick=function(){copy(cur?cur.body:"")};
+$("dl").onclick=function(){save(cur?cur.title:"article",cur?cur.body:"")};
+function openDoc(d){cur=d;$("doclist").hidden=true;$("editor").hidden=false;$("etitle").value=d.title;$("ebody").value=d.body}
+$("back").onclick=function(){$("editor").hidden=true;$("doclist").hidden=false};
+$("save").onclick=async function(){if(!cur)return;cur.title=$("etitle").value;cur.body=$("ebody").value;
+  if(db&&cur.id){try{await db.doc(pth("docs/"+cur.id)).update({title:cur.title,body:cur.body})}catch(e){}}paint();$("back").onclick()};
+$("ecopy").onclick=function(){copy($("ebody").value)};
+$("edl").onclick=function(){save($("etitle").value,$("ebody").value)};
+$("del").onclick=async function(){if(!cur||!confirm("Delete this document?"))return;
+  if(db&&cur.id){try{await db.doc(pth("docs/"+cur.id)).delete()}catch(e){}}
+  docs=docs.filter(function(x){return x!==cur});cur=null;paint();$("back").onclick()};
+init();
+})();
+</script>
+</body>
+</html>

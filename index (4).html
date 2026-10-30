@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Quillbase – AI writing studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Source+Serif+4:wght@400;600&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#f6f5fb;--panel:#fff;--ink:#0f1b2d;--mute:#5b6779;--rule:#d9e0ea;--acc:#5b3df5;--accink:#fff;--ok:#0f7a56;--bad:#b3261e;
+--hd:"Bricolage Grotesque",system-ui,sans-serif;--bd:"Source Serif 4",Georgia,serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0c121c;--panel:#141d2b;--ink:#e8edf5;--mute:#93a0b5;--rule:#26334a;--acc:#a99bff;--accink:#0c121c;--ok:#4cc79a;--bad:#ff8a80}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0c121c;--panel:#141d2b;--ink:#e8edf5;--mute:#93a0b5;--rule:#26334a;--acc:#a99bff;--accink:#0c121c;--ok:#4cc79a;--bad:#ff8a80}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*:before,*:after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--hd)}
+header{display:flex;align-items:center;gap:20px;padding:14px 24px;border-bottom:1px solid var(--rule);background:var(--panel);flex-wrap:wrap}
+.logo{font-weight:700;font-size:20px;letter-spacing:-.02em}
+nav{display:flex;gap:4px;flex:1}
+nav button{background:none;border:0;color:var(--mute);font:500 15px var(--hd);padding:8px 12px;border-radius:6px;cursor:pointer}
+nav button[aria-current=true]{color:var(--ink);background:var(--bg)}
+.meter{text-align:right;line-height:1.1}
+.meter b{font-size:22px;font-variant-numeric:tabular-nums}.meter small{display:block;color:var(--mute);font-size:12px}
+main{max-width:1120px;margin:0 auto;padding:28px 20px 60px}
+h1{font-size:30px;letter-spacing:-.02em;margin:0 0 6px}p.sub{color:var(--mute);margin:0 0 22px}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:18px}
+label{display:block;font-size:13px;color:var(--mute);margin:12px 0 4px}
+textarea,input,select{width:100%;font:16px var(--bd);color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-radius:8px;padding:10px}
+textarea{min-height:110px;resize:vertical}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+@media(max-width:620px){.row{grid-template-columns:1fr}}
+button.go{background:var(--acc);color:var(--accink);border:0;border-radius:8px;font:700 15px var(--hd);padding:11px 20px;cursor:pointer;margin-top:16px}
+button.go:disabled{opacity:.5;cursor:not-allowed}
+button.alt{background:none;border:1px solid var(--rule);color:var(--ink);border-radius:8px;font:500 14px var(--hd);padding:7px 12px;cursor:pointer}
+button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.out{font:18px/1.7 var(--bd);white-space:pre-wrap;margin-top:18px}
+.phase{color:var(--mute);font-size:14px;margin-top:14px}
+.err{color:var(--bad);margin-top:12px;font-size:14px}.note{color:var(--mute);font-size:13px;margin-top:10px}
+.list{display:grid;gap:10px}
+.item{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--rule);background:var(--panel);border-radius:10px}
+.item h3{margin:0;font-size:16px}.item span{color:var(--mute);font-size:13px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}td,th{text-align:left;padding:8px;border-bottom:1px solid var(--rule)}td.n{font-variant-numeric:tabular-nums}
+.pos{color:var(--ok)}.neg{color:var(--bad)}
+.mrow{padding:8px 0;border-bottom:1px solid var(--rule)}.mrow small{display:block;color:var(--mute);font-size:12px}.score{font-size:22px;font-weight:700;margin-bottom:8px}.chk{font-size:14px;padding:3px 0}#schema{min-height:140px;font:13px/1.4 ui-monospace,monospace}.panel{margin-top:16px}.chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.chip{background:var(--bg);border:1px solid var(--rule);color:var(--mute);border-radius:99px;padding:5px 12px;font:500 13px var(--hd);cursor:pointer}.chip:hover{color:var(--ink);border-color:var(--acc)}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--rule);margin:22px 0 4px;overflow-x:auto}.tabs button{background:none;border:0;border-bottom:3px solid transparent;color:var(--mute);font:500 15px var(--hd);padding:10px 14px;cursor:pointer;white-space:nowrap}.tabs button[aria-selected=true]{color:var(--ink);border-bottom-color:var(--acc)}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:opacity .2s}#toast.on{opacity:1}
+.phase{display:flex;align-items:center;gap:8px}.phase.run:before{content:"";width:12px;height:12px;border:2px solid var(--rule);border-top-color:var(--acc);border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}@media(prefers-reduced-motion:reduce){.phase.run:before{animation:none}}
+.hint{color:var(--mute);font-size:13px;margin:4px 0 0}
+.hero{padding:44px 0 26px}.hero h1{font-size:clamp(32px,6vw,54px);line-height:1.05;letter-spacing:-.03em;max-width:17ch;margin:0 0 14px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:26px 0}@media(max-width:700px){.steps{grid-template-columns:1fr 1fr}}.step{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:16px}.step b{display:block;margin-bottom:4px}.step span{color:var(--mute);font-size:14px}
+.band{background:var(--acc);color:var(--accink);border-radius:14px;padding:22px 24px;margin:8px 0 26px;font-size:18px}.band b{font-size:26px}
+.faqh details,.faq details{border:1px solid var(--rule);background:var(--panel);border-radius:10px;padding:12px 16px;margin:8px 0}summary{font:600 16px var(--hd);cursor:pointer}details p{margin:8px 0 0;color:var(--mute)}
+.rgrid{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:20px;margin-top:20px;align-items:start}@media(max-width:900px){.rgrid{grid-template-columns:1fr}}
+.side{display:grid;gap:14px;position:sticky;top:12px}@media(max-width:900px){.side{position:static}}
+.art{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:32px 36px;font:18px/1.75 var(--bd)}@media(max-width:600px){.art{padding:20px}}
+.art.stream{white-space:pre-wrap}.art h1{font:700 34px/1.15 var(--hd);margin:0 0 18px;letter-spacing:-.02em}.art h2{font:700 24px/1.25 var(--hd);margin:30px 0 8px}.art p{margin:0 0 14px;max-width:68ch}.art a{color:var(--acc)}.art h3{font:700 19px var(--hd);margin:22px 0 6px}.art ul{padding-left:22px}
+.art .lede{background:var(--bg);border-left:4px solid var(--acc);padding:14px 16px;border-radius:0 8px 8px 0;font-size:19px}.art .lede small{display:block;font:600 12px var(--hd);color:var(--acc);margin-bottom:4px}
+.ring{width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),var(--rule) 0);display:grid;place-items:center;margin:0 auto 10px}.ring i{font-style:normal;width:74px;height:74px;border-radius:50%;background:var(--panel);display:grid;place-items:center;font:700 26px var(--hd)}
+.serp{font:14px/1.4 Arial,sans-serif;margin-top:8px}.serp u{text-decoration:none;color:var(--mute);font-size:12px}.serp .t{color:#1a0dab;font-size:19px;margin:2px 0}@media(prefers-color-scheme:dark){.serp .t{color:#8ab4f8}}
+.logo{display:flex;align-items:center;gap:8px}
+.steps2{display:flex;gap:6px;list-style:none;padding:0;margin:16px 0 10px;flex-wrap:wrap}.steps2 li{font-size:13px;color:var(--mute);padding:5px 11px;border:1px solid var(--rule);border-radius:99px}.steps2 li.act{color:var(--ink);border-color:var(--acc);background:var(--bg);font-weight:600}.steps2 li.done{color:var(--ok);border-color:var(--ok)}.steps2 li.done:before{content:"\2713 "}
+.bar{height:6px;background:var(--rule);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;width:0;background:var(--acc);transition:width .4s}.pmeta{display:flex;justify-content:space-between;align-items:center;font-size:13px;color:var(--mute);margin-top:8px;gap:10px}
+.caret{display:inline-block;width:8px;height:1em;background:var(--acc);vertical-align:text-bottom;margin-left:2px;animation:bl 1s steps(2) infinite}@keyframes bl{50%{opacity:0}}@media(prefers-reduced-motion:reduce){.caret{animation:none}}.rgrid.solo{grid-template-columns:1fr}
+.frow{display:flex;justify-content:space-between;align-items:center;gap:10px;font-size:14px;padding:6px 0;border-bottom:1px solid var(--rule)}hr{border:0;border-top:1px solid var(--rule);margin:26px 0}
+[hidden]{display:none!important}
+
+.ok{color:var(--ok)}.no{color:var(--bad)}.list .it{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:14px 16px;border:1px solid var(--rule);background:var(--panel);border-radius:10px;cursor:pointer}.it small{color:var(--mute);font-size:13px}.list .it:hover{border-color:var(--acc)}
+.serp .u{color:var(--mute);font-size:12px}.serp .d{color:var(--mute)}
+.pill{display:inline-block;background:var(--bg);border:1px solid var(--rule);border-radius:99px;padding:2px 10px;font-size:13px;margin:2px 4px 2px 0}.kwg{margin:10px 0}.kwg b{display:block;font-size:13px;color:var(--mute);font-weight:600}.kwg .chip{margin:3px 4px 3px 0}
+#toast.show{opacity:1}ul.chk{list-style:none;padding:0;margin:8px 0}.chk li{padding:3px 0;font-size:14px}.na{color:var(--mute)}.card+.card{margin-top:0}main section>.card{margin-bottom:14px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><rect width="26" height="26" rx="7" fill="var(--acc)"/><path d="M7 19c1-6 5-10 12-12-1 7-5 11-12 12zM7 19l5-5" stroke="var(--accink)" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>Quillbase</div>
+  <nav><button data-v="home" aria-current="true">Home</button><button data-v="create">Studio</button><button data-v="docs">Documents</button><button data-v="usage">Usage</button></nav>
+  <div class="meter"><b id="bal">…</b><small>credits left</small></div>
+</header>
+<main>
+<section id="v-home">
+  <div class="hero"><h1>Articles that search and AI answers can quote</h1><p class="sub" style="font-size:18px;max-width:52ch">Describe a topic, add what you know first-hand, and get a full draft written by Claude with a slug, meta tags, FAQ and schema, scored before you publish.</p><button class="go" data-go="create">Open the studio</button></div>
+  <div class="steps">
+    <div class="step"><b>1. Brief</b><span>Give a topic, an audience and real details only you know.</span></div>
+    <div class="step"><b>2. Draft</b><span>Get an answer-first outline with clear headings and an FAQ.</span></div>
+    <div class="step"><b>3. Check</b><span>See your slug, meta tags, Google preview and a 100-point score.</span></div>
+    <div class="step"><b>4. Keep</b><span>Edit, copy or download the draft, and copy ready-made schema.</span></div>
+  </div>
+  <div class="band"><b>10,000 free credits</b><br>One article costs 1 credit. Failed runs are refunded automatically.</div>
+  <div class="faqh"><details><summary>Is the text ready to publish?</summary><p>Treat it as a strong first draft. Add your own experience, check every fact, and edit it into your voice.</p></details>
+  <details><summary>Will this rank?</summary><p>Nobody can promise rankings. The score checks structure and on-page basics only.</p></details>
+  <details><summary>Where is my work saved?</summary><p>In this browser, under Documents. Clearing site data deletes it, so download drafts you want to keep.</p></details></div>
+</section>
+
+<section id="v-create" hidden>
+  <h1>Write articles people trust</h1>
+  <p class="sub">Draft, slug, meta tags, FAQ schema and a live SEO score. 1 credit per article, refunded if a run fails.</p>
+  <div class="card">
+    <label for="brief">Topic or brief</label>
+    <textarea id="brief" placeholder="e.g. How to start composting in a small apartment"></textarea>
+    <div class="chips" id="chips"><button class="chip" type="button">How to price your first online course</button><button class="chip" type="button">What is AI search and why course creators should care</button><button class="chip" type="button">Membership site or online course: which to start with</button></div>
+    <label for="exp">Your own experience or facts to include (optional)</label>
+    <textarea id="exp" placeholder="One per line: what you tried, numbers you measured, mistakes you made, local specifics."></textarea>
+    <p class="hint">Each line is placed in the section where it fits and checked by the score panel. Nothing is invented for you.</p>
+    <label for="aud">Who is it for?</label><input id="aud" placeholder="e.g. coaches launching a first course"><label for="auth">Author name and credentials (optional, builds trust)</label><input id="auth" placeholder="e.g. Priya Nair, course creator since 2018"><p class="hint">Used for the byline and Article schema. Only real credentials, please. Google looks for experience and expertise, not claims.</p><label for="intent">Search intent</label><select id="intent"><option>Detect automatically</option><option>Informational (learn something)</option><option>Commercial (compare options)</option><option>Transactional (ready to act)</option><option>Navigational (find a page)</option></select>
+    <div class="row">
+      <div><label for="ctype">Content type</label><select id="ctype"><option>Blog post</option><option>Article</option></select></div>
+      <div><label for="voice">Voice</label><select id="voice"><option>My master style (mentor voice)</option><option>Plain and human</option><option>Official and clear</option><option>Friendly mentor</option><option>Friendly blog</option><option>Professional</option><option>Product page</option><option>Concise news</option></select></div>
+      <div><label for="words">Word count</label><select id="words"><option>400</option><option>800</option><option selected>1200</option><option>1500</option><option>2000</option></select></div>
+    </div>
+    <label for="kw">Keywords (comma separated, first is primary)</label><input id="kw"><div class="tools"><button class="alt" id="sugg" type="button">Suggest keywords</button></div><div id="kwout" aria-live="polite"></div><p class="hint">Suggestions come from the topic, not from search-volume data. Check volume in Google Search Console or Keyword Planner before you commit.</p>
+    <label for="ufile">Your voice and rule files (optional, .md or .txt)</label>
+    <input type="file" id="ufile" accept=".md,.txt,.markdown" multiple><div id="flist" class="hint"></div>
+    <p class="hint">Saved in this browser. Word and PDF files are not supported; save them as .md or .txt first.</p>
+    <label for="cta">Closing call to action (optional, added after the FAQ)</label><textarea id="cta" style="min-height:70px">Ready to Take Action? Try Zenler Risk Free for 30 Days and join the Accelerator Program that guides you step-by-step toward success. https://zenler.co/sell</textarea>
+    <label for="lnk">Pages to link to (optional, one per line: title - URL)</label><textarea id="lnk" style="min-height:70px" placeholder="Course creation guide - https://example.com/course-creation"></textarea>
+    <p class="hint" id="mode"></p><div class="tools"><button class="go" id="gen">Write article (1 credit)</button></div>
+    <div id="prog" hidden><ol class="steps2" id="st" aria-label="Progress"></ol><div class="bar"><i id="barf"></i></div><div class="pmeta"><span id="pm"></span><button class="alt" id="cancel" type="button">Cancel</button></div></div>
+    <div class="err" id="err" role="alert"></div>
+  </div>
+  <div id="result" hidden>
+    <div class="rgrid"><article class="art" id="out"></article>
+    <aside class="side"><div class="card"><b>How it looks on Google</b><div class="serp" id="serp"></div></div>
+    <div class="card" id="seo"></div><div class="card" id="eeat"></div>
+    <div class="card"><b>Listing details</b><div id="meta"></div></div>
+    <div class="card"><b>Schema markup (Article + FAQ, JSON-LD)</b><textarea id="schema" readonly aria-label="Schema markup"></textarea><div class="tools"><button class="alt" id="cs">Copy schema</button><button class="alt" id="cm">Copy meta</button></div></div></aside></div>
+    <div class="tools"><button class="go" id="hum" type="button">Humanize pass (free)</button><button class="alt" id="copy">Copy draft</button><button class="alt" id="dl">Download .md</button></div>
+    <div class="note">Saved to Documents. Fill every bracketed prompt, add your experience and check each fact before you publish.</div>
+  </div>
+</section>
+
+<section id="v-docs" hidden>
+  <h1>Documents</h1><p class="sub">Your saved drafts.</p>
+  <div class="list" id="doclist"></div>
+  <div id="editor" hidden>
+    <div class="tools"><button class="alt" id="back">Back to list</button><button class="go" id="save">Save changes</button><button class="alt" id="ecopy">Copy</button><button class="alt" id="edl">Download .md</button><button class="alt" id="del">Delete</button></div>
+    <label for="etitle">Title</label><input id="etitle">
+    <label for="ebody">Article text</label><textarea id="ebody" style="min-height:420px;font:17px/1.6 var(--bd)"></textarea>
+  </div>
+</section>
+
+<section id="v-usage" hidden>
+  <h1>Usage</h1><p class="sub">Every credit change is logged here.</p>
+  <div class="card"><table><thead><tr><th>When</th><th>Reason</th><th>Change</th></tr></thead><tbody id="ledger"></tbody></table></div>
+  <div class="note" id="stor"></div>
+</section>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const store={get(k,d){try{const v=localStorage.getItem("dl:"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("dl:"+k,JSON.stringify(v));return true}catch(e){toast("Could not save. Browser storage is blocked.");return false}}};
+let credits=store.get("credits",10000),ledger=store.get("ledger",[]),docs=store.get("docs",[]),files=store.get("files",[]),cur=null,run=null,openId=null;
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function toast(m){const t=$("#toast");t.textContent=m;t.classList.add("show");clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove("show"),2200)}
+function charge(n,why){credits+=n;ledger.unshift({t:Date.now(),why,n});store.set("credits",credits);store.set("ledger",ledger.slice(0,200));render()}
+function render(){$("#bal").textContent=credits.toLocaleString();
+ $("#ledger").innerHTML=ledger.length?ledger.map(l=>`<tr><td>${new Date(l.t).toLocaleString()}</td><td>${esc(l.why)}</td><td>${l.n>0?"+":""}${l.n}</td></tr>`).join(""):'<tr><td colspan="3">No credit changes yet. Write an article to see one.</td></tr>';
+ $("#stor").textContent="Data is stored in this browser only.";
+ $("#flist").innerHTML=files.map((f,i)=>`${esc(f.name)} <button class="chip" data-rm="${i}">Remove</button>`).join(" ");
+ const L=$("#doclist");L.innerHTML=docs.length?docs.map(d=>`<div class="it" tabindex="0" role="button" data-id="${d.id}"><span><b>${esc(d.title)}</b><br><small>${new Date(d.t).toLocaleString()} · ${d.score}/100</small></span><span>Edit</span></div>`).join(""):'<p class="hint">No saved drafts yet. Open the studio and write your first article.</p>'}
+function show(v){$$("main>section").forEach(s=>s.hidden=s.id!=="v-"+v);$$("nav button").forEach(b=>b.setAttribute("aria-current",b.dataset.v===v));if(v==="docs")closeEd()}
+$$("nav button").forEach(b=>b.onclick=()=>show(b.dataset.v));$$("[data-go]").forEach(b=>b.onclick=()=>show(b.dataset.go));
+$("#chips").onclick=e=>{if(e.target.classList.contains("chip")){$("#brief").value=e.target.textContent;$("#brief").focus()}};
+$("#ufile").onchange=async e=>{for(const f of e.target.files){if(!/\.(md|txt|markdown)$/i.test(f.name)){$("#err").textContent=f.name+" is not supported. Save it as .md or .txt.";continue}if(f.size>200000){$("#err").textContent=f.name+" is over 200 KB.";continue}files.push({name:f.name,text:await f.text()})}store.set("files",files);e.target.value="";render()};
+$("#flist").onclick=e=>{if(e.target.dataset.rm){files.splice(+e.target.dataset.rm,1);store.set("files",files);render()}};
+
+/* drafting: structure and placement only, no invented facts */
+const cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+const slugify=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"").split("-").filter(w=>!["a","an","the","to","of","and","for","in","your","how","what","is","why"].includes(w)).slice(0,6).join("-");
+function build(b){
+ const kws=b.kw.split(",").map(s=>s.trim()).filter(Boolean),topic=b.brief.trim().replace(/\s+/g," ");
+ const primary=(kws[0]||topic.replace(/^(how to|what is|why|how)\s+/i,"")).toLowerCase();
+ const title=cap(topic.replace(/[.?]+$/,""));
+ const you=/Professional|news|Product/.test(b.voice)?"readers":"you",aud=b.aud||"your reader";
+ const facts=b.exp.split("\n").map(s=>s.trim()).filter(Boolean);
+ const n=b.words<=400?3:b.words<=800?4:b.words<=1200?5:b.words<=1500?6:7;
+ const defs=[
+  ["The short answer",`[Write the one-sentence answer to “${title}” here.] For ${aud}, the answer to ${primary} depends on three things: the goal, the starting point and the time available.`],
+  ["Who this is for",`This guide is written for ${aud}. If ${you==="you"?"you":"they"} are weighing ${primary} for the first time, start here.`],
+  ["What to do first",`Start with the smallest step that proves ${primary} works for ${aud}. [Name that step and how long it takes.]`],
+  ["Mistakes to avoid",`Most problems with ${primary} come from skipping the basics. [List the two or three mistakes you see most.]`],
+  ["How to know it is working",`Pick one measurable sign for ${primary} and check it weekly. [State the number or signal to watch.]`],
+  ["Tools and costs",`List what ${aud} actually needs for ${primary}, and what can wait. [Add real prices and tools.]`],
+  ["Next steps",`Choose one action for this week and put it in your calendar. [Say what that action is.]`]
+ ].slice(0,n);
+ let fi=0;const secs=defs.map(([h,p])=>{let body=p;const take=Math.ceil((facts.length-fi)/Math.max(1,defs.length-defs.findIndex(d=>d[0]===h)));for(let k=0;k<take&&fi<facts.length;k++)body+="\n\nFrom experience: "+facts[fi++];return"## "+h+"\n\n"+body});
+ const faq=[[`What is ${primary}?`,`[Define ${primary} in two sentences.]`],[`Who is ${primary} for?`,`It is aimed at ${aud}.`],[`How long does ${primary} take?`,`[Give a realistic range from your experience.]`],[`What is the most common mistake with ${primary}?`,facts[0]?facts[0]:`[Name the mistake and the fix.]`]];
+ const links=b.lnk.split("\n").map(l=>l.split(/\s+-\s+(?=https?:)/)).filter(a=>a.length===2&&/^https?:/.test(a[1].trim())).map(a=>[a[0].trim(),a[1].trim()]);
+ let md="# "+title+"\n\n"+secs.join("\n\n")+"\n\n## Frequently asked questions\n\n"+faq.map(([q,a])=>`### ${q}\n\n${a}`).join("\n\n");
+ if(b.cta.trim())md+="\n\n"+b.cta.trim();
+ if(links.length)md+="\n\n## Related reading\n\n"+links.map(([t,u])=>`- [${t}](${u})`).join("\n");
+ const slug=slugify(kws[0]||topic)||"article";
+ let desc=`${cap(primary)} explained for ${aud}: the short answer, what to do first, mistakes to avoid and answers to common questions.`;
+ if(desc.length>160)desc=desc.slice(0,157)+"...";
+ const metaTitle=title.length>60?title.slice(0,57)+"...":title;
+ const schema={"@context":"https://schema.org","@graph":[{"@type":"Article",headline:metaTitle,description:desc,inLanguage:"en",dateModified:new Date().toISOString().slice(0,10)},{"@type":"FAQPage",mainEntity:faq.map(([q,a])=>({"@type":"Question",name:q,acceptedAnswer:{"@type":"Answer",text:a}}))}]};
+ return{md,title,slug,desc,metaTitle,primary,facts,links,schema:JSON.stringify(schema,null,2),target:+b.words,hasFaq:true,author:(b.author||"").trim(),intent:"",verify:[]};
+}
+const AIPAT=["delve","digital landscape","in today’s fast-paced","in today's fast-paced","in this comprehensive guide","it’s important to note","it's important to note","it is important to note","game-changer","game changer","unlock the power","unleash","tapestry","navigate the","in the realm of","leverage","seamless","cutting-edge","robust","holistic","testament to","at the end of the day","look no further","whether you’re a","whether you're a","in conclusion","final thoughts","moreover","furthermore","embark on","elevate your","revolutionize","revolutionise","empower","next level","dive into","dive deep","ever-evolving","crucial role","plays a vital role","a wide range of","ultimate guide","harness the power","transform your"];
+function strip(md){return md.replace(/^#+ .*$/gm,"").replace(/\[([^\]]+)\]\([^)]+\)/g,"$1").replace(/[*_`>-]/g,"")}
+function sentences(t){return t.split(/(?<=[.!?])\s+|\n+/).map(s=>s.trim()).filter(s=>s.split(/\s+/).length>2)}
+const syl=w=>{w=w.toLowerCase().replace(/[^a-z]/g,"");if(w.length<=3)return 1;return Math.max(1,(w.replace(/(?:[^laeiouy]es|ed|[^laeiouy]e)$/,"").replace(/^y/,"").match(/[aeiouy]{1,2}/g)||[]).length)};
+function analyse(md,skip=[]){const t=strip(md),ss=sentences(t),ws=t.split(/\s+/).filter(Boolean);
+ const grade=ss.length?Math.max(0,.39*(ws.length/ss.length)+11.8*(ws.reduce((s,w)=>s+syl(w),0)/Math.max(1,ws.length))-15.59):0;
+ const low=t.toLowerCase(),hits=[...new Set(AIPAT.filter(p=>low.includes(p)))];
+ const seen={},dups=[];ss.forEach(s=>{const k=s.toLowerCase().replace(/[^a-z0-9 ]/g,"");if(seen[k])dups.push(s);seen[k]=1});
+ let low2=low;skip.forEach(k=>{if(k&&k.length>3)low2=low2.split(k.toLowerCase()).join(" ")});const grams={};const lw=low2.replace(/[^a-z0-9 ]/g," ").split(/\s+/).filter(Boolean);for(let i=0;i<lw.length-5;i++){const g=lw.slice(i,i+6).join(" ");grams[g]=(grams[g]||0)+1}
+ const reps=Object.entries(grams).filter(([g,c])=>c>1).length;
+ const lens=ss.map(s=>s.split(/\s+/).length),avg=lens.reduce((a,b)=>a+b,0)/Math.max(1,lens.length),sd=Math.sqrt(lens.reduce((a,b)=>a+(b-avg)**2,0)/Math.max(1,lens.length));
+ const emd=(md.match(/—/g)||[]).length;
+ const pats=[];const raw0=t;
+ if((raw0.match(/\bnot (just|only|merely)\b[^.]{0,70}\bbut\b/gi)||[]).length)pats.push("“not just X, but Y” phrasing");
+ if((raw0.match(/\b(it|this|that)(’s|'s| is) not (about )?[^.,]{0,50}, (it|this|that)(’s|'s| is)/gi)||[]).length)pats.push("“it’s not X, it’s Y” phrasing");
+ if((raw0.match(/\b\w+, \w+,? and \w+\b/g)||[]).length>3)pats.push("too many three-word lists");
+ const op={};ss.forEach(s=>{const w=s.split(/\s+/)[0].toLowerCase().replace(/[^a-z’']/g,"");op[w]=(op[w]||0)+1});
+ const topOp=Object.entries(op).filter(([w])=>!["i","you","the","this"].includes(w)).sort((a,b)=>b[1]-a[1])[0];
+ if(topOp&&ss.length>=12&&topOp[1]/ss.length>.12)pats.push("many sentences start with “"+topOp[0]+"”");
+ const pls=md.split(/\n{2,}/).filter(p=>!/^#/.test(p.trim())&&p.trim().split(/\s+/).length>5).map(p=>sentences(p).length);
+ if(pls.length>=6){const m=pls.reduce((a,b)=>a+b,0)/pls.length,sdp=Math.sqrt(pls.reduce((a,b)=>a+(b-m)**2,0)/pls.length);if(sdp<.6)pats.push("every paragraph is the same size")}
+ const blocks=md.split(/\n{2,}/).map(s=>s.trim()).filter(Boolean),intro=(blocks.find(b=>!/^#/.test(b)&&!/^by /i.test(b))||"").replace(/\[([^\]]+)\]\([^)]+\)/g,"$1");
+ return{grade:Math.round(grade*10)/10,hits,dups:dups.length,reps,avg:Math.round(avg),varied:sd>=5,emd,words:ws.length,h1:(md.match(/^# /gm)||[]).length,intro:intro.length,badClose:/^##\s.*(final thoughts|conclusion)/im.test(md),patterns:pats,inlineLinks:(md.match(/\[[^\]]+\]\(https?:[^)]+\)/g)||[]).length}}
+function score(d){
+ const A=analyse(d.md,[d.primary,d.title]),words=A.words,first=d.md.split(/\s+/).slice(0,100).join(" ").toLowerCase(),pk=(d.primary.split(" ").find(w=>w.length>3)||d.primary).slice(0,4);
+ const used=d.facts.filter(f=>d.md.includes(f)).length,h2=(d.md.match(/^## /gm)||[]).length,open=(d.md.match(/\[[^\]]+\]/g)||[]).filter(x=>!x.includes("](")).length;
+ const faqN=(d.md.match(/^### /gm)||[]).length,tl=d.title.length;
+ const c=[
+  ["Title is 45 to 60 characters ("+tl+")",tl>=45&&tl<=60,8],
+  ["Primary keyword in title",d.title.toLowerCase().includes(pk),8],
+  ["Primary keyword in first 100 words",first.includes(pk),8],
+  ["Intro paragraph is about 150 characters ("+A.intro+")",A.intro>=110&&A.intro<=200,6],
+  ["Meta description is 120 to 160 characters ("+d.desc.length+")",d.desc.length>=120&&d.desc.length<=160,8],
+  ["Slug is short",d.slug.length>0&&d.slug.length<=50,5],
+  ["Exactly one H1",A.h1===1,5],
+  ["Three or more H2 sections",h2>=3,6],
+  ["FAQ at the base with 4 or more questions",d.hasFaq&&faqN>=4,6],
+  ["Related keywords listed (4 to 8)",(d.related||[]).length>=4,5],
+  ["Natural closing heading, not “Final thoughts”",!A.badClose,4],
+  ["Length near target ("+words+" of "+d.target+")",words>=d.target*.75&&words<=d.target*1.4,8],
+  ["Reads at grade "+A.grade+" (aim for 9 or lower)",A.grade<=9,8],
+  ["No stock AI phrases or patterns ("+(A.hits.length+A.patterns.length)+" found)",A.hits.length===0&&A.patterns.length===0,8],
+  ["No repeated sentences or phrases",A.dups===0&&A.reps<=2,5],
+  ["Your facts used ("+used+" of "+d.facts.length+")",used===d.facts.length,10,d.facts.length>0],
+  ["Internal links placed inside the text ("+A.inlineLinks+")",A.inlineLinks>=Math.min(d.links.length,3),5,d.links.length>0],
+  ["Author byline for E-E-A-T",!!d.author&&d.md.includes("By "+d.author.split(",")[0]),5,!!d.author]];
+ let got=0,tot=0;c.forEach(x=>{if(x[3]===false)return;tot+=x[2];if(x[1])got+=x[2]});
+ return{c,total:Math.round(got/tot*100),open,words,A,skipped:c.filter(x=>x[3]===false).map(x=>x[0].replace(/ \(.*/,""))}
+}
+const mdHtml=md=>esc(md).replace(/^### (.*)$/gm,"<h3>$1</h3>").replace(/^## (.*)$/gm,"<h2>$1</h2>").replace(/^# (.*)$/gm,"<h1>$1</h1>").replace(/\[([^\]]+)\]\((https?:[^)]+)\)/g,'<a href="$2" rel="noopener">$1</a>').replace(/^- (.*)$/gm,"<li>$1</li>").split(/\n{2,}/).map(p=>/^<(h|li)/.test(p)?p:"<p>"+p+"</p>").join("\n");
+function showResult(d){cur=d;const s=score(d);$("#out").innerHTML=mdHtml(d.md);
+ $("#serp").innerHTML=`<div class="u">example.com › ${esc(d.slug)}</div><div class="t">${esc(d.metaTitle)}</div><div class="d">${esc(d.desc)}</div>`;
+ $("#seo").innerHTML=`<b>SEO score</b><div class="ring" style="--p:${s.total};--c:var(--${s.total>=80?"ok":"acc"});margin-top:10px"><i>${s.total}</i></div><ul class="chk">${s.c.filter(x=>x[3]!==false).map(x=>`<li class="${x[1]?"ok":"no"}">${x[1]?"✓":"✗"} ${esc(x[0])}</li>`).join("")}</ul>${s.skipped.length?`<p class="hint">Optional checks not counted because you left them blank: ${s.skipped.map(esc).join(", ")}. Fill them in to score them too.</p>`:""}<p class="hint">${s.open} bracketed prompt${s.open===1?"":"s"} still to fill in. The score checks on-page basics. It cannot predict rankings, and it cannot prove a text passes any AI detector.</p>`;
+ const A=s.A;$("#eeat").innerHTML=`<b>Human tone and trust</b><p><span class="pill">Intent: ${esc(d.intent||"not set")}</span><span class="pill">Reading grade ${A.grade}</span><span class="pill">${A.words} words</span><span class="pill">avg ${A.avg} words per sentence</span></p>${A.hits.length?`<p class="no">Stock phrases to rewrite: ${A.hits.map(esc).join(", ")}. Use the Humanize pass.</p>`:'<p class="ok">✓ No stock AI phrases found.</p>'}${A.patterns.length?`<p class="no">Patterns to fix: ${A.patterns.map(esc).join("; ")}.</p>`:""}${A.varied?"":'<p class="no">Sentence lengths are too even. Mix short and long ones.</p>'}${A.emd>6?`<p class="no">${A.emd} em dashes. Keep them for occasional emphasis.</p>`:""}${A.dups||A.reps>2?`<p class="no">Repetition found (${A.dups} repeated sentences, ${A.reps} repeated phrases).</p>`:'<p class="ok">✓ No internal repetition.</p>'}<b>Experience, expertise, trust</b><ul class="chk"><li class="${d.facts.length?"ok":"no"}">${d.facts.length?"✓":"✗"} Experience: ${d.facts.length} first-hand fact${d.facts.length===1?"":"s"} used</li><li class="${d.author?"ok":"no"}">${d.author?"✓":"✗"} Expertise: author byline ${d.author?"added":"missing"}</li><li class="${d.links.length?"ok":"no"}">${d.links.length?"✓":"✗"} Trust: internal links ${d.links.length?"added":"missing"}</li></ul>${(d.verify&&d.verify.length)?`<b>Verify or cite before publishing</b><ul>${d.verify.map(v=>"<li>"+esc(v)+"</li>").join("")}</ul>`:""}<p class="hint">Plagiarism and AI-detector scores need an outside tool. Run the final text through one after you add your own examples.</p>`;
+ $("#meta").innerHTML=`<p><b>Suggested URL</b><br>/${esc(d.slug)}</p><p><b>SEO meta title</b> (${d.metaTitle.length})<br>${esc(d.metaTitle)}</p><p><b>Meta description</b> (${d.desc.length})<br>${esc(d.desc)}</p>${d.category?`<p><b>Category</b><br>${esc(d.category)}</p>`:""}${(d.tags||[]).length?`<p><b>Tags</b><br>${d.tags.map(t=>`<span class="pill">${esc(t)}</span>`).join("")}</p>`:""}${(d.related||[]).length?`<p><b>Related keywords</b><br>${d.related.map(t=>`<span class="pill">${esc(t)}</span>`).join("")}</p>`:""}`;
+ $("#schema").value=d.schema;$("#result").hidden=false;d.score=s.total}
+let sample=null;
+try{if(window.claude&&claude.use)claude.use("sample").then(s=>{sample=s;if(!s)$("#mode").textContent="Offline outline mode: the AI writer is only available when this page is opened from claude.ai."})}catch(e){}
+const HUMAN=`BUILT-IN STYLE (from the author's Master Style Guide and Human-First AI Search Content Rules):
+VOICE: conversational, friendly, practical, confident without sounding corporate. A helpful mentor walking alongside the reader, not a guru. Beginner-friendly plain English, no jargon unless explained, contractions encouraged, natural "you". Supportive but grounded: realistic expectations, no hype, no fluff, no exaggerated claims. Occasional exclamation for warmth. Em dashes only now and then for emphasis. Calm humour where natural.
+SIGNATURE TOUCHES (use a few, never all, never forced): "Think again.", "This is simple to do.", "Remember…", "Keep your eyes open…", "This is not an overnight success.", "The problem is…", "This is where…", a rhetorical question that challenges the reader, a gentle challenge.
+RHYTHM: paragraphs of 2 to 5 sentences, mixed in size so they do not look machine-made. Mix sentence length, including very short ones. Like this. Then a longer sentence when the reader needs context before acting. Do not start consecutive sentences the same way. No perfect three-part lists in every section. Lists only when they clearly help (steps, comparisons), and every list is followed by a short explanation or example. Default to natural paragraphs.
+EXAMPLES: use relatable example scenes ("Picture a coach who…", "Say you run a membership site…") clearly framed as examples. Use first-person "I" experience ONLY if it comes from the supplied FACTS. Never invent personal stories, numbers, studies, quotes, testimonials or sources.
+SEARCH: match the search intent immediately and put a direct answer under clear headings that answer engines can lift. Use the primary keyword and related phrases naturally, never stuffed. Include natural question-style phrases and a beginner-friendly definition where needed. Headings are human and varied, written for search intent (for example "What Is X?", "Common Mistakes To Avoid"), never robotic or repetitive.
+NEVER USE: in today's digital landscape, in this comprehensive guide, it's important to note, unlock the power of, take your business to the next level, game-changer, dive into, leverage (say "use"), robust, seamless, "Final Thoughts" as a heading, generic summaries that add nothing, and overuse of transform, revolutionise, empower, elevate, unlock. Remove unnecessary adjectives. Say exactly what you mean. Do not add deliberate spelling mistakes.
+CLOSE: end the article body with a natural next-step section, titled something like "What To Do Next", "A Simple Way To Start", "Your Next Step" or "Where This Goes From Here". Then the FAQ at the base, then the call to action.
+If the voice is "Official and clear": neutral, precise and careful, no slang or hype, defined terms.
+E-E-A-T: show experience only from the supplied FACTS. If a claim needs a source you do not have, state it cautiously and add it to the "verify" list.`;
+const rulesText=()=>files.map(f=>"### "+f.name+"\n"+f.text).join("\n\n").slice(0,8000);
+function aiPrompt(b){return `You are the author's content writing assistant. Write one ${b.ctype.toLowerCase()} and reply with ONLY a JSON object, no code fences, with these keys:
+"title" (the H1, 50 to 60 characters, primary keyword near the start), "metaTitle" (50 to 60 characters), "slug" (lowercase, hyphens, max 6 words), "metaDescription" (130 to 155 characters), "category" (one suggested category), "tags" (4 to 6 suggested tags), "related" (4 to 8 related keywords and natural question-style search phrases), "intent" (Informational, Commercial, Transactional or Navigational: ${b.intent.startsWith("Detect")?"detect it from the topic and write to match it":"it must be "+b.intent.split(" ")[0]}), "verify" (up to 5 plain-language items the author should fact-check or source), "faq" (4 or 5 items {"q","a"}, each answer 2 to 5 sentences), "markdown" (the full article).
+Rules for "markdown": exactly one H1 ("# " plus the title) and no other H1. ${b.author.trim()?'Directly under it add the line "By '+b.author.trim()+'" using exactly that text.':"No byline."} Then a first paragraph of about 150 characters (between 130 and 170) that answers the search intent straight away. Then 4 to 6 "## " sections with human, search-friendly headings. Weave the supplied internal links into the body paragraphs as markdown links with descriptive anchor text, each used once, never in a list at the end. After the main sections add a next-step section ("What To Do Next", "A Simple Way To Start", "Your Next Step" or "Where This Goes From Here"). Then "## Frequently asked questions" with the same FAQ items as "### question" plus the answer. Target about ${b.words} words in total. Voice: ${b.voice}. Reader: ${b.aud||"a general reader"}. Use the primary keyword naturally in the title and first 100 words.
+${HUMAN}
+${b.cta.trim()?"After the FAQ, add this call to action verbatim:\n"+b.cta.trim():"Do not add a call to action."}
+${b.links.length?"Internal pages to link to:\n"+b.links.map(l=>"- "+l[0]+" - "+l[1]).join("\n"):"No internal links were supplied, so add none."}
+${rulesText()?"The author also uploaded these rule files. Follow them:\n"+rulesText():""}
+TOPIC: ${b.brief}
+KEYWORDS (first is primary): ${b.kw||"(choose the best primary keyword from the topic)"}
+FACTS: work every one into the section where it fits best, keeping numbers and details exactly:
+${b.facts.length?b.facts.map((f,i)=>(i+1)+". "+f).join("\n"):"(none supplied, so write without first-person claims)"}`}
+function fromAI(raw,b){const m=raw.replace(/^```(?:json)?|```$/gm,"").trim();const j=JSON.parse(m.slice(m.indexOf("{"),m.lastIndexOf("}")+1));
+ if(!j.markdown||!j.title)throw new Error("Incomplete draft");
+ const kws=b.kw.split(",").map(s=>s.trim()).filter(Boolean),primary=(kws[0]||j.title).toLowerCase();
+ const faq=(j.faq||[]).filter(x=>x.q&&x.a);let desc=(j.metaDescription||"").trim();if(desc.length>160)desc=desc.slice(0,157)+"...";
+ const mt=(j.metaTitle||j.title).trim();
+ const schema={"@context":"https://schema.org","@graph":[{"@type":"Article",headline:mt,description:desc,inLanguage:"en",dateModified:new Date().toISOString().slice(0,10),...(b.author.trim()?{author:{"@type":"Person",name:b.author.split(",")[0].trim()}}:{})},{"@type":"FAQPage",mainEntity:faq.map(x=>({"@type":"Question",name:x.q,acceptedAnswer:{"@type":"Answer",text:x.a}}))}]};
+ const arr=v=>Array.isArray(v)?v.map(String).slice(0,8):[];
+ return{md:j.markdown.trim(),title:j.title.trim(),slug:slugify(j.slug||j.title)||"article",desc,metaTitle:mt,primary,facts:b.facts,links:b.links,schema:JSON.stringify(schema,null,2),target:+b.words,hasFaq:faq.length>0,intent:j.intent||"",verify:arr(j.verify).slice(0,5),author:b.author.trim(),category:j.category||"",tags:arr(j.tags),related:arr(j.related)}}
+$("#gen").onclick=async()=>{
+ const b={brief:$("#brief").value,exp:$("#exp").value,aud:$("#aud").value,words:$("#words").value,kw:$("#kw").value,cta:$("#cta").value,lnk:$("#lnk").value,voice:$("#voice").value,ctype:$("#ctype").value,author:$("#auth").value,intent:$("#intent").value};
+ $("#err").textContent="";
+ if(b.brief.trim().length<8){$("#err").textContent="Add a topic of at least a few words.";$("#brief").focus();return}
+ if(credits<1){$("#err").textContent="You have no credits left.";return}
+ b.facts=b.exp.split("\n").map(s=>s.trim()).filter(Boolean);
+ b.links=b.lnk.split("\n").map(l=>l.split(/\s+-\s+(?=https?:)/)).filter(a=>a.length===2&&/^https?:/.test(a[1].trim())).map(a=>[a[0].trim(),a[1].trim()]);
+ charge(-1,"Article: "+b.brief.trim().slice(0,50));$("#gen").disabled=true;$("#result").hidden=true;
+ const steps=["Reading your brief","Placing your facts","Writing sections and FAQ","Polishing for a human tone","Scoring the draft"];$("#st").innerHTML=steps.map(s=>"<li>"+s+"</li>").join("");$("#prog").hidden=false;
+ const lis=$$("#st li"),set=i=>{lis.forEach((l,k)=>l.className=k<i?"done":k===i?"act":"");$("#barf").style.width=(i/steps.length*100)+"%"};
+ const ac=new AbortController();let cancelled=false;
+ const end=()=>{$("#gen").disabled=false;$("#prog").hidden=true};
+ $("#cancel").onclick=()=>{cancelled=true;ac.abort()};
+ try{
+  set(0);await new Promise(r=>setTimeout(r,300));set(1);
+  let d;
+  if(sample){set(2);
+   const raw=await sample(aiPrompt(b),{signal:ac.signal,cache:false,modelTier:"default",onText:({text})=>{$("#barf").style.width=Math.min(90,50+text.length/(b.words*6)*40)+"%"}});
+   d=fromAI(raw.text,b);set(3);
+   for(let r=0;r<2;r++){const A=analyse(d.md);if(!A.hits.length&&!A.patterns.length&&A.grade<=9&&A.varied)break;try{d.md=await humanizeMd(d.md,ac.signal)}catch(e){if(cancelled)throw e;break}}
+  }else{await new Promise(r=>setTimeout(r,600));set(2);d=build(b)}
+  set(4);d.score=score(d).total;d.docId=Date.now().toString(36);showResult(d);
+  docs.unshift({id:d.docId,t:Date.now(),title:d.title,body:d.md,score:d.score});store.set("docs",docs);render();toast("Saved to Documents");end();
+ }catch(e){end();charge(1,cancelled?"Refund: cancelled":"Refund: run failed");
+  if(cancelled)toast("Cancelled. Credit refunded.");
+  else $("#err").textContent=e&&e.code==="not_granted"?"Permission to use the AI writer was declined. Your credit was refunded.":e&&e.code==="rate_limited"?"Too many requests. Wait a minute and try again. Your credit was refunded.":"The draft failed and your credit was refunded. Try again.";}
+};
+function localKw(t){const k=t.replace(/^(how to|what is|why|how)\s+/i,"").replace(/[?.]+$/,"").toLowerCase().trim();return{primary:[k],secondary:[k+" for beginners","best "+k,k+" mistakes",k+" cost",k+" checklist"],longtail:["how to "+k+" step by step",k+" without experience",k+" common problems"],questions:["what is "+k+"?","how long does "+k+" take?","is "+k+" worth it?"],intent:"Informational"}}
+function addKw(k){const cur=$("#kw").value.split(",").map(s=>s.trim()).filter(Boolean);if(!cur.map(x=>x.toLowerCase()).includes(k.toLowerCase()))cur.push(k);$("#kw").value=cur.join(", ");toast("Added: "+k)}
+$("#sugg").onclick=async()=>{const t=$("#brief").value.trim();if(t.length<4){$("#err").textContent="Type a topic first, then suggest keywords.";$("#brief").focus();return}
+ $("#err").textContent="";const out=$("#kwout");out.textContent="Finding keywords…";let r;
+ try{if(!sample)throw 0;const raw=await sample(`Suggest SEO keywords for an article on: "${t}". Audience: ${$("#aud").value||"general"}. Reply with ONLY JSON: {"primary":[1 best main keyword],"secondary":[5 related],"longtail":[5 long-tail phrases people search],"questions":[5 questions searchers ask],"intent":"Informational|Commercial|Transactional|Navigational"}. No search volume numbers.`,{cache:false,modelTier:"quick"});const m=raw.text.replace(/```(?:json)?/g,"");r=JSON.parse(m.slice(m.indexOf("{"),m.lastIndexOf("}")+1))}catch(e){r=localKw(t)}
+ const g=(n,a)=>a&&a.length?`<div class="kwg"><b>${n}</b>${a.map(k=>`<button class="chip" type="button" data-k="${esc(k)}">+ ${esc(k)}</button>`).join("")}</div>`:"";
+ out.innerHTML=`<p class="hint">Likely intent: <b>${esc(r.intent||"Informational")}</b>. Tap a keyword to add it.</p>`+g("Main keyword",r.primary)+g("Related",r.secondary)+g("Long-tail",r.longtail)+g("Questions people ask",r.questions)};
+$("#kwout").onclick=e=>{if(e.target.dataset.k)addKw(e.target.dataset.k)};
+async function humanizeMd(md,signal){const A=analyse(md);
+ const fix=[A.hits.length?"remove or rewrite these stock phrases: "+A.hits.join(", "):"",A.patterns.length?"fix these patterns: "+A.patterns.join("; "):"",A.grade>9?"shorten sentences to reading grade 8 or lower":"",!A.varied?"vary sentence length more, mixing very short and longer sentences":"",A.emd>6?"cut most em dashes":""].filter(Boolean).join("; ")||"tighten wording and make it sound more natural";
+ const raw=await sample(`Edit this article so it reads like a real person wrote it. Keep EVERY fact, number, heading, link, FAQ question, byline and call to action exactly as they are. Do not add new claims, stories or sources. Keep the H1 and the headings count the same.\nFix: ${fix}. Also vary paragraph sizes, cut filler, remove unnecessary adjectives and repeated phrasing, and keep plain English.\n${HUMAN}\nReturn ONLY the revised markdown, no commentary.\n\n${md}`,{cache:false,modelTier:"default",signal});
+ const out=raw.text.replace(/^```(?:markdown)?\n?|```$/g,"").trim();if(out.length<md.length*.7||!/^# /m.test(out))throw new Error("short");return out}
+$("#hum").onclick=async()=>{if(!cur)return;if(!sample){toast("The Humanize pass needs the AI writer (open the claude.ai page).");return}
+ $("#hum").disabled=true;$("#hum").textContent="Rewriting…";
+ try{cur.md=await humanizeMd(cur.md);const s=score(cur);cur.score=s.total;showResult(cur);const d=docs.find(x=>x.id===cur.docId);if(d){d.body=cur.md;d.score=cur.score;d.t=Date.now();store.set("docs",docs);render()}toast("Humanized and saved")}
+ catch(e){toast("Could not rewrite. Your draft is unchanged.")}finally{$("#hum").disabled=false;$("#hum").textContent="Humanize pass (free)"}};
+const copy=async t=>{try{await navigator.clipboard.writeText(t);toast("Copied")}catch(e){toast("Copy failed. Select the text and copy it.")}};
+const dl=(name,t)=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([t],{type:"text/markdown"}));a.download=(name||"draft")+".md";a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500)};
+$("#copy").onclick=()=>copy(cur.md);$("#dl").onclick=()=>dl(cur.slug,cur.md);$("#cs").onclick=()=>copy(cur.schema);
+$("#cm").onclick=()=>copy(`URL: /${cur.slug}\nMeta title: ${cur.metaTitle}\nMeta description: ${cur.desc}\nCategory: ${cur.category||""}\nTags: ${(cur.tags||[]).join(", ")}\nRelated keywords: ${(cur.related||[]).join(", ")}`);
+function openDoc(id){const d=docs.find(x=>x.id===id);if(!d)return;openId=id;$("#doclist").hidden=true;$("#editor").hidden=false;$("#etitle").value=d.title;$("#ebody").value=d.body}
+function closeEd(){openId=null;$("#editor").hidden=true;$("#doclist").hidden=false}
+$("#doclist").onclick=e=>{const it=e.target.closest(".it");if(it)openDoc(it.dataset.id)};
+$("#doclist").onkeydown=e=>{if(e.key==="Enter"){const it=e.target.closest(".it");if(it)openDoc(it.dataset.id)}};
+$("#back").onclick=closeEd;
+$("#save").onclick=()=>{const d=docs.find(x=>x.id===openId);if(!d)return;d.title=$("#etitle").value.trim()||"Untitled";d.body=$("#ebody").value;d.t=Date.now();store.set("docs",docs);render();toast("Saved")};
+$("#ecopy").onclick=()=>copy($("#ebody").value);$("#edl").onclick=()=>dl(slugify($("#etitle").value)||"draft",$("#ebody").value);
+$("#del").onclick=()=>{if(confirm("Delete this draft? This cannot be undone.")){docs=docs.filter(x=>x.id!==openId);store.set("docs",docs);render();closeEd();toast("Deleted")}};
+render();
+</script>
+</body>
+</html>
